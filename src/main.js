@@ -1,43 +1,14 @@
-// Импорт вендоров и утилит, не удаляйте его
-//import "./vendor";
-//import { ImageSlider } from "./utils/image-slider";
-//import { iosVhFix } from "./utils/ios-vh-fix";
-//import { modals, initModals } from "./modals/init-modals";
 import BouquetsPresenter from "./presenter/bouquets-presenter.js";
+import BouquetModel from "./model/bouquet-model.js";
+import BouquetsApiService from "./api/bouquets-api-service.js";
 
-// Ваши импорты...
+const AUTHORIZATION = 'Basic Oruel1984';
+const END_POINT = 'https://grading.objects.htmlacademy.pro';
 
-// Код для работы попапов, не удаляйте его
-/*
-window.addEventListener("DOMContentLoaded", () => {
-  iosVhFix();
-
-  window.addEventListener("load", () => {
-    // Инициализация слайдера
-    const imageSlider = new ImageSlider(".image-slider");
-    imageSlider.init();
-
-    // Инициализация попапов
-    initModals();
-  });
-*/
-// Пример кода для открытия
-/*
-document
-  .querySelector(".element-which-is-open-popup")
-  .addEventListener("click", () => modals.open("popup-data-attr"));
-  */
-
-// Код отработает, если разметка попапа уже отрисована в index.html
-
-// Если вы хотите рисовать разметку попапа под каждое "открытие",
-// то не забудьте перенесети в код addEventListener инициализацию слайдера
-
-// ------------
-
-// Ваш код...
+const bouquetsModel = new BouquetModel(new BouquetsApiService(END_POINT, AUTHORIZATION));
 const bodyElement = document.querySelector('body');
 const siteMainElement = bodyElement.querySelector('main');
-const bouquetsPresenter = new BouquetsPresenter(siteMainElement);
+const bouquetsPresenter = new BouquetsPresenter(siteMainElement, bouquetsModel);
 bouquetsPresenter.init();
-//});
+bouquetsModel.init();
+

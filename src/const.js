@@ -1,0 +1,14 @@
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+  INIT: 'INIT',
+};
+
+const UserAction = {
+  UPDATE_BOUQUET: 'UPDATE_BOUQUET',
+  ADD_DEFFERED_BOUQUET: 'ADD_DEFFERED_BOUQUET',
+  DELETE_DEFFERED_BOUQUET: 'DELETE_DEFFERED_BOUQUET',
+};
+
+export { UpdateType, UserAction };
