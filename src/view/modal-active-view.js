@@ -1,8 +1,8 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from "../framework/view/abstract-stateful-view";
 
-const createModalActiveViewTemplate = () =>
+const createModalActiveViewTemplate = (bouquet) =>
   `
-    <div class="modal modal--preload modal--product product-card-active" data-modal="product-card">
+    <div class="modal modal--preload modal--product is-active" data-modal="product-card">
       <div class="modal__wrapper">
         <div class="modal__overlay" data-close-modal></div>
         <div class="modal__content">
@@ -17,27 +17,15 @@ const createModalActiveViewTemplate = () =>
             </svg>
             <div class="image-slider swiper modal-product__slider">
               <div class="image-slides-list swiper-wrapper">
-                <div class="image-slides-list__item swiper-slide">
-                  <div class="image-slide">
-                    <picture>
-                      <source type="image/webp" srcset="img/slides/slide-01.webp, img/slides/slide-01@2x.webp 2x"><img src="img/slides/slide-01.jpg" srcset="img/slides/slide-01@2x.jpg 2x" width="1274" height="1789" alt="">
-                    </picture><span class="image-author image-slide__author">Автор  фотографии:  «Christie Kim»</span>
+                ${bouquet.images.map((bouquetImage) => `
+                  <div class="image-slides-list__item swiper-slide">
+                    <div class="image-slide">
+                      <picture>
+                        <source type="image/webp"><img src=${bouquetImage} width="1274" height="1789" alt="">
+                      </picture>
+                    </div>
                   </div>
-                </div>
-                <div class="image-slides-list__item swiper-slide">
-                  <div class="image-slide">
-                    <picture>
-                      <source type="image/webp" srcset="img/slides/slide-02.webp, img/slides/slide-02@2x.webp 2x"><img src="img/slides/slide-02.jpg" srcset="img/slides/slide-02@2x.jpg 2x" width="1274" height="1789" alt="">
-                    </picture>
-                  </div>
-                </div>
-                <div class="image-slides-list__item swiper-slide">
-                  <div class="image-slide">
-                    <picture>
-                      <source type="image/webp" srcset="img/slides/slide-03.webp, img/slides/slide-03@2x.webp 2x"><img src="img/slides/slide-03.jpg" srcset="img/slides/slide-03@2x.jpg 2x" width="1274" height="1789" alt="">
-                    </picture>
-                  </div>
-                </div>
+                `).join(' ')}
               </div>
               <button class="btn-round btn-round--to-left image-slider__button image-slider__button--prev" type="button">
                 <svg width="80" height="85" aria-hidden="true" focusable="false">
@@ -52,9 +40,9 @@ const createModalActiveViewTemplate = () =>
             </div>
             <div class="product-description">
               <div class="product-description__header">
-                <h3 class="title title--h2">Летнее настроение</h3><b class="price price--size-big">5&nbsp;800<span>Р</span></b>
+                <h3 class="title title--h2">${bouquet.title}</h3><b class="price price--size-big">${bouquet.price}<span>Р</span></b>
               </div>
-              <p class="text text--size-40">сочетание полевых и&nbsp;садовых цветов: розы, львиный зев, чертополох, тюльпаны и&nbsp;эустома</p>
+              <p class="text text--size-40">${bouquet.description}</p>
               <button class="btn btn--outlined btn--full-width product-description__button" type="button" data-focus>отложить
               </button>
             </div>
@@ -64,8 +52,41 @@ const createModalActiveViewTemplate = () =>
     </div>
 `;
 
-export default class ModalActiveView extends AbstractView {
+export default class ModalActiveView extends AbstractStatefulView {
+  #bouquet = null;
+  //#differdBouquets = [];
+  //#differdBouquet = this.#differdBouquets.find((differdBouquet) => differdBouquet === this.#bouquet.id);
+  //#buttonTextStatus = this.#differdBouquet !== undefined ? 'отложено' : 'отложить';
+  constructor(bouquet) {
+    super();
+    this.#bouquet = bouquet;
+    //this.#differdBouquets = differdBouquets;
+  }
   get template() {
-    return createModalActiveViewTemplate();
+    return createModalActiveViewTemplate(this.#bouquet);
+  }
+  /*
+  get buttonStatusText() {
+    return this.#buttonTextStatus;
+  }
+  set buttonStatusText(buttonTextStatus) {
+    this.#buttonTextStatus = buttonTextStatus;
+  }
+    */
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.product-description__button').addEventListener('click', this.#favoriteClickHandler);
+  }
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+  setCloseModalClickHandler = (callback) => {
+    this._callback.closeModalClick = callback;
+    this.element.querySelector('.modal-product__btn-close').addEventListener('click', this.#closeModalClickHandler);
+  }
+  #closeModalClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.closeModalClick();
   }
 }

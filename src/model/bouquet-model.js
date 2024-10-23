@@ -5,6 +5,7 @@ export default class BouquetModel extends Observable {
   #bouquetsApiService = null;
   #bouquets = [];
   #defferedBouquets = [];
+  #bouquet = null;
 
   constructor(bouquetsApiService) {
     super();
@@ -12,6 +13,7 @@ export default class BouquetModel extends Observable {
   }
 
   get bouquets() {
+    //console.log(this.#bouquets);
     return this.#bouquets;
   }
 
@@ -23,7 +25,6 @@ export default class BouquetModel extends Observable {
     try {
       this.#bouquets = await this.#bouquetsApiService.bouquets;
       this.#defferedBouquets = await this.#bouquetsApiService.defferedBouquets;
-      console.log(this.#defferedBouquets);
     } catch (err) {
       this.#bouquets = [];
       this.#defferedBouquets = {};
@@ -40,9 +41,9 @@ export default class BouquetModel extends Observable {
     try {
       const response = await this.#bouquetsApiService.updateDefferedBouquet(update);
       const updatedBouquet = response;
-      this.#bouquets = [
+      this.#defferedBouquets = [
         ...this.#defferedBouquets.slice(0, index),
-        update,
+        updatedBouquet,
         this.#defferedBouquets.slice(index + 1),
       ];
       this._notify(updateType, updatedBouquet);
@@ -54,26 +55,41 @@ export default class BouquetModel extends Observable {
   addDefferedBouquet = async (updateType, update) => {
     try {
       const response = await this.#bouquetsApiService.addDefferedBouquet(update);
-      const newDefferedBouquet = response;
-      this.#bouquets = [newDefferedBouquet, ...response];
-      this._notify(updateType, newDefferedBouquet);
+      const newDefferedBouquet = response.id;
+      this.#defferedBouquets.products = { ...this.#defferedBouquets.products, [newDefferedBouquet]: 1 };
+      this.defferedBouquets.productCount += 1;
+      this.#defferedBouquets.sum += update.price;
+      this._notify(updateType, this.defferedBouquets);
     } catch (err) {
       throw new Error('Can/t add bouquet');
     }
   };
 
+  getBouquet = async (update) => {
+    this.#bouquet = await this.#bouquetsApiService.getBouquet(update);
+    //console.log(this.#bouquet);
+    return this.#bouquet;
+    //this._notify(updateType, this.bouquet)
+  }
+
+  get bouquet() {
+    return this.#bouquet;
+  }
+
   deleteDefferedBouquet = async (updateType, update) => {
-    const index = this.#bouquets.findIndex((bouquet) => bouquet.id === update.id);
-    if (index === -1) {
+    const id = Object.keys(this.#defferedBouquets.products).find((bouquet) => bouquet === update.id);
+
+    if (id === undefined) {
       throw new Error('Can\'t delete unexisting bouquet');
     }
     try {
       await this.#bouquetsApiService.deleteDefferedBouquet(update);
-      this.#bouquets = [
-        ...this.#defferedBouquets.slice(0, index),
-        ...this.#defferedBouquets.slice(index + 1),
-      ];
-      this._notify(updateType);
+      delete this.#defferedBouquets.products[id];
+      if (this.#defferedBouquets.productCount > 0) {
+        this.#defferedBouquets.productCount -= 1;
+        this.#defferedBouquets.sum -= update.price;
+      }
+      this._notify(updateType, this.#defferedBouquets);
     } catch (err) {
       throw new Error('Can\'t delete bouquet');
     }

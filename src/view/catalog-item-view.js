@@ -1,4 +1,5 @@
-import AbstractView from '../framework/view/abstract-view.js';
+
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const createCatalogItemTemplate = (bouquet) =>
   `
@@ -15,20 +16,41 @@ const createCatalogItemTemplate = (bouquet) =>
                       </svg>
                     </button>
                     <picture>
-                      <source type="image/webp" srcset="img/content/items/item-delicate-irises.webp, img/content/items/item-delicate-irises@2x.webp 2x"><img src="img/content/items/item-delicate-irises.png" srcset="img/content/items/item-delicate-irises@2x.png 2x" width="244" height="412" alt="item-delicate-irises">
+                      <source type="image/webp"><img src=${bouquet.previewImage} width="244" height="412" >
                     </picture>
                   </div>
                   <div class="item-card__desc-wrap">
-                    <h3 class="title title--h4 item-card__title">Нежные Ирисы</h3>
-                    <div class="item-card__price-wrap"><b class="item-card__formatted-price">1 500</b><span class="item-card__currency">р</span></div>
+                    <h3 class="title title--h4 item-card__title">${bouquet.title}</h3>
+                    <div class="item-card__price-wrap"><b class="item-card__formatted-price">${bouquet.price}</b><span class="item-card__currency">р</span></div>
                   </div>
-                  <p class="text text--size-20 item-card__desc">Минималистичный букет для коллег и&nbsp;близких с&nbsp;запахом весны.</p>
+                  <p class="text text--size-20 item-card__desc">${bouquet.description}</p>
                 </div>
               </li>
 `;
 
-export default class CatalogItemView extends AbstractView {
-  get template() {
-    return createCatalogItemTemplate();
+export default class CatalogItemView extends AbstractStatefulView {
+  #bouquet = null;
+
+  constructor(bouquet) {
+    super();
+    this.#bouquet = bouquet;
   }
+  get template() {
+    return createCatalogItemTemplate(this.#bouquet);
+  }
+  setClickBouquetHandler = (callback) => {
+    this._callback.clickBouquet = callback;
+    this.element.querySelector('.item-card__btn').addEventListener('click', this.#clickBouquetHandler);
+  };
+  #clickBouquetHandler = () => {
+    this._callback.clickBouquet();
+  };
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.button-heart').addEventListener('click', this.#favoriteClickHandler);
+  };
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  };
 }

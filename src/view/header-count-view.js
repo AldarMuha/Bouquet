@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
-const createHeaderCountViewTemplate = () =>
+const createHeaderCountViewTemplate = (defferedBouquets) =>
   `
             <div class="header-count">
               <button class="header-count__btn" type="button">
@@ -10,20 +10,33 @@ const createHeaderCountViewTemplate = () =>
                 <span class="visually-hidden">закрыть</span>
               </button>
               <div class="header-count__count">
-                <p class="text text--size-20 header-count__counter">4</p>
+                <p class="text text--size-20 header-count__counter">${(defferedBouquets.productCount) ? defferedBouquets.productCount : '0'}</p>
               </div>
               <div class="header-count__block">
                 <p class="text text--size-20 header-count__text">сумма</p>
                 <b class="price price--size-min header-count__price">
-                  15 700
+                  ${(defferedBouquets.sum) ? defferedBouquets.sum : '0'}
                   <span>Р</span>
                 </b>
               </div>
             </div>
 `;
 
-export default class HeaderCountView extends AbstractView {
+export default class HeaderCountView extends AbstractStatefulView {
+  #defferedBouquets = null;
+  constructor(defferedBouquets) {
+    super();
+    this.#defferedBouquets = defferedBouquets;
+  }
   get template() {
-    return createHeaderCountViewTemplate();
+    return createHeaderCountViewTemplate(this.#defferedBouquets);
+  }
+  setButtonClickHandler = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.header-count__btn').addEventListener('click', this.#buttonClickHandler);
+  };
+  #buttonClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonClick();
   }
 }

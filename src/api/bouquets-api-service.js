@@ -13,6 +13,10 @@ export default class BouquetsApiService extends ApiService {
       .then(ApiService.parseResponse);
   }
 
+  getBouquet = (bouquetItem) => this._load({ url: `flowers-shop/products/${bouquetItem.id}` })
+    .then(ApiService.parseResponse)
+    .catch(() => null);
+
   get defferedBouquets() {
     return this._load({ url: 'flowers-shop/cart' })
       .then(ApiService.parseResponse);
@@ -32,7 +36,7 @@ export default class BouquetsApiService extends ApiService {
   addDefferedBouquet = async (bouquet) => {
     const response = await this._load({
       url: `flowers-shop/products/${bouquet.id}`,
-      method: Method.POST,
+      method: Method.PUT,
       body: JSON.stringify(bouquet),
       headers: new Headers({ 'Content-Type': 'application/json' }),
     });
