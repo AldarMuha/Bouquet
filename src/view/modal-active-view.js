@@ -17,15 +17,15 @@ const createModalActiveViewTemplate = (bouquet) =>
             </svg>
             <div class="image-slider swiper modal-product__slider">
               <div class="image-slides-list swiper-wrapper">
-                ${bouquet.images.map((bouquetImage) => `
+                ${/*bouquet.images.map((bouquetImage) =>*/ `
                   <div class="image-slides-list__item swiper-slide">
                     <div class="image-slide">
                       <picture>
-                        <source type="image/webp"><img src=${bouquetImage} width="1274" height="1789" alt="">
+                        <source type="image/webp"><img src=${bouquet.previewImage} width="1274" height="1789" alt="">
                       </picture>
                     </div>
                   </div>
-                `).join(' ')}
+                `/*).join(' ')*/}
               </div>
               <button class="btn-round btn-round--to-left image-slider__button image-slider__button--prev" type="button">
                 <svg width="80" height="85" aria-hidden="true" focusable="false">

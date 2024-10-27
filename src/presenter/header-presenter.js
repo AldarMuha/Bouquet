@@ -94,6 +94,9 @@ export default class HeaderPresenter {
       this.#handleViewAction(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
     });
     card.setButtonRemoveClickHandler(() => {
+      for (let index = 0; index < defferedBouquets; index++) {
+        this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+      }
       this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
     });
   };

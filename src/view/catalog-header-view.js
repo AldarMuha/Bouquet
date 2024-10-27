@@ -8,13 +8,13 @@ const createCatalogHeaderViewTemplate = () =>
         <div class="catalogue__sorting">
           <div class="sorting-price">
             <h3 class="title sorting-price__title">Цена</h3>
-              <a class="sorting-price__link sorting-price__link--incr sorting-price__link--active" href="#" aria-label="сортировка по возрастанию цены" data-sort-type=${SortType.PRICE_UP}>
-                <svg class="sorting-price__icon" width="50" height="46" aria-hidden="true">
+              <a class="sorting-price__link sorting-price__link--incr" href="#" aria-label="сортировка по возрастанию цены" data-sort-type="${SortType.PRICE_UP}">
+                <svg class="sorting-price__icon" width="50" height="46" aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <use xlink:href="#icon-increase-sort"></use>
                 </svg>
               </a>
-              <a class="sorting-price__link" href="#" aria-label="сортировка по убыванию цены" data-sort-type=${SortType.PRICE_DOWN}>
-                <svg class="sorting-price__icon" width="50" height="46" aria-hidden="true">
+              <a class="sorting-price__link" href="#" aria-label="сортировка по убыванию цены" data-sort-type="${SortType.PRICE_DOWN}">
+                <svg class="sorting-price__icon" width="50" height="46" aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink">
                   <use xlink:href="#icon-descending-sort"></use>
                 </svg>
               </a>
@@ -32,10 +32,12 @@ export default class CatalogHeaderView extends AbstractView {
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
   };
   #sortTypeChangeHandler = (evt) => {
-    if (evt.target.tagName = 'A') {
+    if (evt.target.tagName !== 'A') {
+      console.log('o');
       return;
     }
     evt.preventDefault();
+    console.log(evt.target.dataset.sortType);
     this._callback.sortTypeChange(evt.target.dataset.sortType);
-  }
+  };
 }

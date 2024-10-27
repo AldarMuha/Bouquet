@@ -2,7 +2,7 @@ const sortPriceUp = (bouquetA, bouquetB) => {
   if (bouquetA.price > bouquetB.price) {
     return 1;
   }
-  if (bouquetA.price > bouquetB.price) {
+  if (bouquetA.price < bouquetB.price) {
     return -1;
   }
   return 0;

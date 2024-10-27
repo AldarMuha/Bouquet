@@ -8,9 +8,11 @@ export default class BouquetPresenter {
   #bouquetComponent = null;
   #changeData = null;
   #modalComponent = null;
-  constructor(bouquetListContainer, changeData) {
+  #defferedBouquets = null;
+  constructor(bouquetListContainer, changeData, defferedBouquets) {
     this.#bouquetListContainer = bouquetListContainer;
     this.#changeData = changeData;
+    this.#defferedBouquets = defferedBouquets;
   }
   init = (bouquet) => {
     this.#bouquetComponent = new CatalogItemView(bouquet);
@@ -19,7 +21,13 @@ export default class BouquetPresenter {
     render(this.#bouquetComponent, this.#bouquetListContainer);
 
     this.#bouquetComponent.setFavoriteClickHandler(() => {
-      this.#changeData(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+      console.log(this.#defferedBouquets.products);
+      if (this.#defferedBouquets.products !== undefined && !Object.keys(this.#defferedBouquets.products).find((item) => item === bouquet.id)) {
+        //console.log('yes')
+        this.#changeData(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+        //this.#bouquetComponent
+      }
+      //console.log('no');
     });
 
     this.#bouquetComponent.setClickBouquetHandler(() => {
@@ -37,8 +45,8 @@ export default class BouquetPresenter {
   }
 
   destroy = () => {
-    this.#bouquetComponent.remove();
-    this.#modalComponent.remove();
+    this.#bouquetComponent.element.remove();
+    this.#modalComponent.element.remove();
   };
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {

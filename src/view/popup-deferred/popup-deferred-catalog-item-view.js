@@ -68,6 +68,8 @@ export default class PopupDeferrdCatalogItemView extends AbstractStatefulView {
     this.element.querySelector('#btn-remove').addEventListener('click', this.#buttonRemoveClickHandler);
   }
   #buttonRemoveClickHandler = (evt) => {
+    console.log('buttonRemoveClickHandler');
+
     evt.preventDefault();
     this._callback.buttonRemoveClick();
     if (this._state.count >= 1) {

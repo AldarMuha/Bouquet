@@ -20,4 +20,40 @@ const SortType = {
   PRICE_UP: 'price-up',
 };
 
-export { UpdateType, UserAction, BOUQUETS_PER_STEP, SortType };
+const FilterColorType = {
+  ALL: 'all',
+  RED: 'red',
+  WHITE: 'white',
+  LILAC: 'lilac',
+  YELLOW: 'yellow',
+  PINK: 'pink',
+};
+
+const FilterColorTextName = {
+  ALL: 'все цвета',
+  RED: 'красный',
+  WHITE: 'белый',
+  LILAC: 'сиреневый',
+  YELLOW: 'желтый',
+  PINK: 'розовый',
+}
+
+const FilterReasonType = {
+  ALL: 'all',
+  BIRTHDAY: 'birthdayboy',
+  BRID: 'brid',
+  MOTHER: 'mother',
+  COLLEAGUE: 'colleague',
+  FAVORITE: 'favorite',
+};
+
+const FilterReasonTextName = {
+  ALL: 'Для всех',
+  BIRTHDAY: 'Имениннику',
+  BRID: 'Невесте',
+  MOTHER: 'Маме',
+  COLLEAGUE: 'Коллеге',
+  FAVORITE: 'Любимой',
+};
+
+export { UpdateType, UserAction, BOUQUETS_PER_STEP, SortType, FilterColorType, FilterReasonType, FilterColorTextName, FilterReasonTextName };

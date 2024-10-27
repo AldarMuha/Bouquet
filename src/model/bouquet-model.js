@@ -77,14 +77,12 @@ export default class BouquetModel extends Observable {
   }
 
   deleteDefferedBouquet = async (updateType, update) => {
-    const id = Object.keys(this.#defferedBouquets.products).find((bouquet) => bouquet === update.id);
+    //const id = Object.keys(this.#defferedBouquets.products).find((bouquet) => bouquet === update.id);
 
-    if (id === undefined) {
-      throw new Error('Can\'t delete unexisting bouquet');
-    }
     try {
       await this.#bouquetsApiService.deleteDefferedBouquet(update);
-      delete this.#defferedBouquets.products[id];
+      // delete this.#defferedBouquets.products[id];
+
       if (this.#defferedBouquets.productCount > 0) {
         this.#defferedBouquets.productCount -= 1;
         this.#defferedBouquets.sum -= update.price;
