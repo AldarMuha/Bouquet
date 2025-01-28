@@ -1,6 +1,6 @@
 import AbstractStatefulView from "../framework/view/abstract-stateful-view";
 
-const createModalActiveViewTemplate = (bouquet) =>
+const createModalActiveViewTemplate = (bouquet, isDefferedBouquet) =>
   `
     <div class="modal modal--preload modal--product is-active" data-modal="product-card">
       <div class="modal__wrapper">
@@ -43,7 +43,8 @@ const createModalActiveViewTemplate = (bouquet) =>
                 <h3 class="title title--h2">${bouquet.title}</h3><b class="price price--size-big">${bouquet.price}<span>Р</span></b>
               </div>
               <p class="text text--size-40">${bouquet.description}</p>
-              <button class="btn btn--outlined btn--full-width product-description__button" type="button" data-focus>отложить
+              <button class="btn btn--outlined btn--full-width product-description__button" type="button" data-focus>
+                  ${isDefferedBouquet ? 'отложено' : 'отложить'}
               </button>
             </div>
           </div>
@@ -54,25 +55,16 @@ const createModalActiveViewTemplate = (bouquet) =>
 
 export default class ModalActiveView extends AbstractStatefulView {
   #bouquet = null;
-  //#differdBouquets = [];
-  //#differdBouquet = this.#differdBouquets.find((differdBouquet) => differdBouquet === this.#bouquet.id);
-  //#buttonTextStatus = this.#differdBouquet !== undefined ? 'отложено' : 'отложить';
-  constructor(bouquet) {
+  #isDefferedBouquet = false;
+  constructor(bouquet, isDefferedBouquet) {
     super();
     this.#bouquet = bouquet;
-    //this.#differdBouquets = differdBouquets;
+    this.#isDefferedBouquet = isDefferedBouquet;
   }
   get template() {
-    return createModalActiveViewTemplate(this.#bouquet);
+    return createModalActiveViewTemplate(this.#bouquet, this.#isDefferedBouquet);
   }
-  /*
-  get buttonStatusText() {
-    return this.#buttonTextStatus;
-  }
-  set buttonStatusText(buttonTextStatus) {
-    this.#buttonTextStatus = buttonTextStatus;
-  }
-    */
+
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.product-description__button').addEventListener('click', this.#favoriteClickHandler);

@@ -15,4 +15,12 @@ export default class PopupDeferredBtnContainerView extends AbstractView {
   get template() {
     return createPopupDeferredBtnContainerViewTemplate();
   }
+  setButtonClick = (callback) => {
+    this._callback.buttonClick = callback;
+    this.element.querySelector('.popup-deferred__btn-clean').addEventListener('click', this.#buttonClickHandler)
+  };
+  #buttonClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonClick();
+  };
 }

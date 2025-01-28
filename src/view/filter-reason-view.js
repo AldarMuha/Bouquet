@@ -4,8 +4,8 @@ const createFilterItemTeplate = (filter, currentFilterType) => {
   const { type, textName } = filter;
   return (`
       <div class="filter-field-text filter-reason__form-field--for-${type} filter-reason__form-field">
-        <input class="filter-field-text__input filter-reason__form-field--for-${type} filter-reason__form-field" type="radio" id="filter-reason-field-id-0" name="reason" value="for-${type}" ${type === currentFilterType ? 'checked' : ''}>
-        <label class="filter-field-text__label" for="filter-reason-field-id-0"><span class="filter-field-text__text">${textName}</span></label>
+        <input class="filter-field-text__input filter-reason__form-field--for-${type} filter-reason__form-field" type="radio" id="filter-reason-field-id-${type}" name="reason" value="${type}" ${type === currentFilterType ? 'checked' : ''}>
+        <label class="filter-field-text__label" for="filter-reason-field-id-${type}"><span class="filter-field-text__text">${textName}</span></label>
       </div>
     `);
 };

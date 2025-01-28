@@ -30,4 +30,12 @@ export default class HeroPopupView extends AbstractView {
   get template() {
     return createHeroPopupViewTemplate();
   }
+  setButtonCloseClickHandler = (callback) => {
+    this._callback.buttonCloseClick = callback;
+    this.element.querySelector('.hero__popupclose').addEventListener('click', this.#buttonCloseClickHandler);
+  };
+  #buttonCloseClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.buttonCloseClick();
+  };
 }

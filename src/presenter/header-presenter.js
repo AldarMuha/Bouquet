@@ -28,6 +28,7 @@ export default class HeaderPresenter {
   #popupDeferredCatalogItemComponent = new PopupDeferrdCatalogItemView();
   #popupDeferredBtnContainerComponent = new PopupDeferredBtnContainerView();
   #popupDeferredSumComponent = new PopupDeferredSumView();
+  #buqets = {};
 
   #bouquetsPresenter = null;
 
@@ -60,14 +61,27 @@ export default class HeaderPresenter {
   init = () => {
     this.#renderHeader();
   }
-  #handleModelEvent = () => {
-    this.init();
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#renderHeader();
+        this.#renderPopupDeferred();
+        console.log('patch');
+        break;
+      case UpdateType.INIT:
+        this.#renderHeader();
+        console.log('init');
+        break;
+      case UpdateType.MAJOR:
+        this.#renderHeader();
+    }
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.GET_BOUQUET:
         await this.#bouquetsModel.getBouquet(update);
+        this.#isLoading = false;
         break;
       case UserAction.UPDATE_BOUQUET:
         break;
@@ -87,38 +101,67 @@ export default class HeaderPresenter {
         break;
     }
   };
-  #renderCatalogItem = (bouquet, defferedBouquets) => {
-    const card = new PopupDeferrdCatalogItemView(bouquet, defferedBouquets);
+  #renderCatalogItem = (bouquet, defferedBouquets, isLoading) => {
+    const card = new PopupDeferrdCatalogItemView(bouquet, defferedBouquets, isLoading);
+    this.#buqets[bouquet.id] = card
     render(card, this.#popupDeferredCatalogListComponent.element);
     card.setButtonAddClickHandler(() => {
-      this.#handleViewAction(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+      this.#handleViewAction(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.PATCH, bouquet);
+      //this.#containerMain.innerHTML = '';
+      // this.#renderPopupDeferred();
+      //console.log('pp', this.defferedBouquets);
     });
     card.setButtonRemoveClickHandler(() => {
-      for (let index = 0; index < defferedBouquets; index++) {
-        this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+      this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.PATCH, bouquet);
+    });
+    card.setButtonCloseClickHandler(() => {
+      if (this.#isLoading === true) {
+
       }
-      this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+      for (let index = 0; index < defferedBouquets; index++) {
+        this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.PATCH, bouquet);
+      }
+      //this.#isLoading = false;
+      //console.log(this.#isLoading);
     });
   };
 
   #renderPopupDeferred = () => {
     this.#containerMain.innerHTML = '';
     const cardsBouquetId = Object.keys(this.defferedBouquets.products);
+    remove(this.#popupDeferredComponent);
+    remove(this.#popupDeferredWrapperComponent);
+    remove(this.#heroPopupComponent);
+    remove(this.#popupDeferredContainerComponent);
     render(this.#popupDeferredComponent, this.#containerMain, RenderPosition.AFTERBEGIN);
     render(this.#popupDeferredWrapperComponent, this.#popupDeferredComponent.element);
     render(this.#heroPopupComponent, this.#popupDeferredWrapperComponent.element);
     render(this.#popupDeferredContainerComponent, this.#popupDeferredWrapperComponent.element);
     console.log(cardsBouquetId);
+    Object.keys(this.#buqets ?? {}).forEach(id => remove(this.#buqets[id]))
     cardsBouquetId.forEach((cardId) => {
       const bouq = this.bouquets.find((bouquet) => bouquet.id === cardId);
       const defBouq = Object.entries(this.defferedBouquets.products).find((product) => product[0] === bouq.id)[1]
-      this.#renderCatalogItem(bouq, defBouq);
+      this.#renderCatalogItem(bouq, defBouq, this.#isLoading);
     });
 
     render(this.#popupDeferredLinkComponent, this.#popupDeferredContainerComponent.element);
     render(this.#popupDeferredCatalogListComponent, this.#popupDeferredContainerComponent.element);
     render(this.#popupDeferredBtnContainerComponent, this.#popupDeferredContainerComponent.element);
+    this.#popupDeferredBtnContainerComponent.setButtonClick(() => {
+      cardsBouquetId.forEach((cardId) => {
+        const bouq = this.bouquets.find((bouquet) => bouquet.id === cardId);
+        const countBouq = Object.entries(this.defferedBouquets.products).find((product) => product[0] === bouq.id)[1];
+        for (let index = 0; index < countBouq; index++) {
+          this.#handleViewAction(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.PATCH, bouq);
+        }
+      });
+    });
     render(new PopupDeferredSumView(this.defferedBouquets), this.#popupDeferredContainerComponent.element);
+    this.#heroPopupComponent.setButtonCloseClickHandler(() => {
+      this.#containerMain.innerHTML = '';
+      this.#bouquetsPresenter.init();
+    });
     document.addEventListener('keydown', (evt) => {
       evt.preventDefault();
       this.#containerMain.innerHTML = '';

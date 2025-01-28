@@ -4,10 +4,10 @@ const createFilterItemTemplate = (filter, currentFilterType) => {
   const { type, textName } = filter;
   return (`
       <div class="filter-field-img filter-color__form-field">
-        <input class="filter-field-img__input filter-color__form-field" type="checkbox" id="filter-colors-field-id-${type}" name="colors" value="color-${type}" data-filter-color="color-${type}" ${type === currentFilterType ? 'checked' : ''}>
+        <input class="filter-field-img__input filter-color__form-field" type="radio" id="filter-colors-field-id-${type}" name="colors" value=${type} data-filter-color="color-${type}" ${type === currentFilterType ? 'checked' : ''}>
         <label class="filter-field-img__label" for="filter-colors-field-id-${type}"><span class="filter-field-img__img">
         <picture>
-          <source type="image/webp" srcset="img/content/filter-${type}.webp, img/content/filter-${type}@2x.webp 2x"><img src="img/content/filter-${type}.png" srcset="img/content/filter-${type}@2x.png 2x" width="130" height="130" alt="все цвета">
+          <source type="image/webp" srcset="img/content/filter-${type === 'violet' ? 'lilac' : type}.webp, img/content/filter-${type === 'violet' ? 'lilac' : type}@2x.webp 2x"><img src="img/content/filter-${type === 'violet' ? 'lilac' : type}.png" srcset="img/content/filter-${type === 'violet' ? 'lilac' : type}@2x.png 2x" width="130" height="130" alt="все цвета">
         </picture></span><span class="filter-field-img__text">${textName}</span></label>
       </div>
   `);

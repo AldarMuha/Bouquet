@@ -9,25 +9,36 @@ export default class BouquetPresenter {
   #changeData = null;
   #modalComponent = null;
   #defferedBouquets = null;
+  #isDefferedBouquet = false;
+  #countDefferedBouquet = 0;
+  //#defferedBouquetsProducts = [];
   constructor(bouquetListContainer, changeData, defferedBouquets) {
     this.#bouquetListContainer = bouquetListContainer;
     this.#changeData = changeData;
     this.#defferedBouquets = defferedBouquets;
   }
   init = (bouquet) => {
-    this.#bouquetComponent = new CatalogItemView(bouquet);
-    this.#modalComponent = new ModalActiveView(bouquet);
+    //console.log('init ->', bouquet);
+
+    const prevBouquetComponent = this.#bouquetComponent;
+    this.#isDefferedBouquet = Object.keys(this.#defferedBouquets?.products ?? {}).some((defferdBouquet) => defferdBouquet === bouquet.id);
+    this.#countDefferedBouquet = this.#isDefferedBouquet ? this.#defferedBouquets.products[bouquet.id] : 0;
+    this.#bouquetComponent = new CatalogItemView(bouquet, this.#isDefferedBouquet);
+    this.#modalComponent = new ModalActiveView(bouquet, this.#isDefferedBouquet);
 
     render(this.#bouquetComponent, this.#bouquetListContainer);
 
     this.#bouquetComponent.setFavoriteClickHandler(() => {
-      console.log(this.#defferedBouquets.products);
-      if (this.#defferedBouquets.products !== undefined && !Object.keys(this.#defferedBouquets.products).find((item) => item === bouquet.id)) {
-        //console.log('yes')
-        this.#changeData(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
-        //this.#bouquetComponent
+      //console.log(this.#isDefferedBouquet);
+      if (!this.#isDefferedBouquet) {
+        this.#changeData(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MAJOR, bouquet);
+      } else {
+        for (let i = 0; i < this.#countDefferedBouquet; i++) {
+          this.#changeData(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.MAJOR, bouquet);
+        }
+        // this.#isDefferedBouquet = false;
+        console.log(this.#isDefferedBouquet);
       }
-      //console.log('no');
     });
 
     this.#bouquetComponent.setClickBouquetHandler(() => {
@@ -40,7 +51,13 @@ export default class BouquetPresenter {
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     });
     this.#modalComponent.setFavoriteClickHandler(() => {
-      this.#changeData(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MINOR, bouquet);
+      if (!this.#isDefferedBouquet) {
+        this.#changeData(UserAction.ADD_DEFFERED_BOUQUET, UpdateType.MAJOR, bouquet);
+      } else {
+        for (let i = 0; i < this.#countDefferedBouquet; i++) {
+          this.#changeData(UserAction.DELETE_DEFFERED_BOUQUET, UpdateType.MAJOR, bouquet);
+        }
+      }
     });
   }
 

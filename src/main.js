@@ -4,7 +4,7 @@ import BouquetModel from "./model/bouquet-model.js";
 import FilterModel from "./model/filter-model.js";
 import BouquetsApiService from "./api/bouquets-api-service.js";
 //import HeaderCountView from "./view/header-count-view.js";
-//import FilterPresenter from "./presenter/filter-presenter.js";
+import FilterPresenter from "./presenter/filter-presenter.js";
 
 const AUTHORIZATION = 'Basic Oruel1984';
 const END_POINT = 'https://grading.objects.htmlacademy.pro';

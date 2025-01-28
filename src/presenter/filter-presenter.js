@@ -16,7 +16,7 @@ export default class FilterPresenter {
     this.#filterModel = filterModel;
     this.#bouquetModel = bouquetModel;
 
-    this.#bouquetModel.addObserver(this.#handleModelEvent);
+    //this.#bouquetModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
@@ -81,10 +81,13 @@ export default class FilterPresenter {
   init = () => {
     const filtersColor = this.filtersColor;
     const filtersReason = this.filtersReason;
+    /*
     const prevFilterReasonComponent = this.#filterReasonComponent;
     const prevFilterColorComponent = this.#filterColorComponent;
+    */
     this.#filterReasonComponent = new FilterReasonView(filtersReason, this.#filterModel.filterReason);
     this.#filterColorComponent = new FilterColorView(filtersColor, this.#filterModel.filterColor);
+    /*
     this.#filterReasonComponent.setFilterTypeChangeHandler(this.#filterTypeReasonChangeHandler);
     this.#filterColorComponent.setFilterTypeChangeHandler(this.#filterTypeColorChangeHandler);
 
@@ -94,9 +97,11 @@ export default class FilterPresenter {
     }
     replace(this.#filterReasonComponent, prevFilterReasonComponent);
     replace(this.#filterColorComponent, prevFilterColorComponent);
+*/
+    render(this.#filterReasonComponent, this.#filterContainer);
 
-    //render(this.#filterReasonComponent, this.#filterContainer);
-    //render(this.#filterColorComponent, this.#filterContainer);
+
+    render(this.#filterColorComponent, this.#filterContainer);
   };
 
   #handleModelEvent = () => {

@@ -24,7 +24,7 @@ const FilterColorType = {
   ALL: 'all',
   RED: 'red',
   WHITE: 'white',
-  LILAC: 'lilac',
+  VIOLET: 'violet',
   YELLOW: 'yellow',
   PINK: 'pink',
 };
@@ -33,7 +33,7 @@ const FilterColorTextName = {
   ALL: 'все цвета',
   RED: 'красный',
   WHITE: 'белый',
-  LILAC: 'сиреневый',
+  VIOLET: 'сиреневый',
   YELLOW: 'желтый',
   PINK: 'розовый',
 }
@@ -41,10 +41,10 @@ const FilterColorTextName = {
 const FilterReasonType = {
   ALL: 'all',
   BIRTHDAY: 'birthdayboy',
-  BRID: 'brid',
-  MOTHER: 'mother',
-  COLLEAGUE: 'colleague',
-  FAVORITE: 'favorite',
+  BRID: 'bridge',
+  MOTHER: 'motherday',
+  COLLEAGUE: 'colleagues',
+  FAVORITE: 'forlove',
 };
 
 const FilterReasonTextName = {
